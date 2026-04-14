@@ -3,7 +3,7 @@ import streamlit as st
 
 from logic_utils import get_range_for_difficulty, parse_guess, check_guess, update_score, get_ai_hint
 
-st.set_page_config(page_title="Glitchy Guesser", page_icon="🎮")
+st.set_page_config(page_title="Secret Number Investigator", page_icon="🎮")
 
 st.markdown(
     """
