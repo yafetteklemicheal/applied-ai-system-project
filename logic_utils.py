@@ -1,4 +1,52 @@
-#FIX: Refactored logic into logic_utils.py using Copilot Agent mode
+import os
+from dotenv import load_dotenv
+import google.generativeai as genai
+
+load_dotenv()
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+genai.configure(api_key=GEMINI_API_KEY)
+model = genai.GenerativeModel("gemini-2.5-flash-lite")
+
+def get_ai_hint(guess: int, secret: int, low: int, high: int, attempts_left: int, difficulty: str):
+    """
+    Generate an AI-powered hint using Gemini API.
+    
+    Returns a varied hint including directional, range, temperature, mathematical,
+    parity, proximity, or urgency hints.
+    """
+    try:
+        # Determine the direction
+        if guess > secret:
+            direction = "lower"
+            difference = guess - secret
+        else:
+            direction = "higher"
+            difference = secret - guess
+        
+        # Determine if the number is odd or even
+        parity = "odd" if secret % 2 == 1 else "even"
+        
+        # Create a prompt for Gemini to generate a creative hint
+        prompt = f"""You are a hint generator for a number guessing game.
+
+Context: secret={secret}, guess={guess}, direction={direction}, difference={difference}, range={low}-{high}, attempts_left={attempts_left}, parity={parity}, difficulty={difficulty}
+
+Give ONE short encouraging hint (1-2 sentences) to help the player narrow down the range. Vary between: directional, range narrowing, temperature, mathematical, parity, proximity, or urgency hints."""
+
+        response = model.generate_content(prompt,
+        generation_config=genai.GenerationConfig(max_output_tokens=60))
+        hint = response.text.strip()
+        return hint
+    except Exception as e:
+        # Fallback to simple hint if API fails
+        print(f"AI Hint Error: {e}")  # Debug: print the actual error
+        if guess > secret:
+            return f"📉 Go LOWER!"
+        else:
+            return f"📈 Go HIGHER!"
+
+
 def get_range_for_difficulty(difficulty: str):
     """Return (low, high) inclusive range for a given difficulty."""
     if difficulty == "Easy":

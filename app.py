@@ -1,7 +1,7 @@
 import random
 import streamlit as st
 
-from logic_utils import get_range_for_difficulty, parse_guess, check_guess, update_score
+from logic_utils import get_range_for_difficulty, parse_guess, check_guess, update_score, get_ai_hint
 
 st.set_page_config(page_title="Glitchy Guesser", page_icon="🎮")
 
@@ -153,7 +153,19 @@ if submit:
 
             # Store hint in session state for persistent display
             if show_hint:
-                st.session_state.hint_message = message
+                # Generate AI-powered hint instead of simple message
+                if outcome != "Win":
+                    ai_hint = get_ai_hint(
+                        guess=guess_int,
+                        secret=st.session_state.secret,
+                        low=low,
+                        high=high,
+                        attempts_left=attempt_limit - st.session_state.attempts,
+                        difficulty=difficulty
+                    )
+                    st.session_state.hint_message = ai_hint
+                else:
+                    st.session_state.hint_message = message
                 st.session_state.show_hint_display = True
             else:
                 st.session_state.hint_message = None
