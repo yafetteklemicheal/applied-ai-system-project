@@ -9,7 +9,7 @@ st.markdown(
     """
     <style>
     [data-testid="stSidebar"] {
-        width: 300px;
+        width: 350px;
     }
     </style>
     <script>
