@@ -1,12 +1,12 @@
 import os
 from dotenv import load_dotenv
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 
 load_dotenv()
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel("gemini-2.5-flash-lite")
+client = genai.Client(api_key=GEMINI_API_KEY)
 
 def get_ai_hint(guess: int, secret: int, low: int, high: int, attempts_left: int, difficulty: str):
     """
@@ -32,10 +32,15 @@ def get_ai_hint(guess: int, secret: int, low: int, high: int, attempts_left: int
 
 Context: secret={secret}, guess={guess}, direction={direction}, difference={difference}, range={low}-{high}, attempts_left={attempts_left}, parity={parity}, difficulty={difficulty}
 
-Give ONE short encouraging hint (1-2 sentences) to help the player narrow down the range. Vary between: directional, range narrowing, temperature, mathematical, parity, proximity, or urgency hints."""
+Give ONE short encouraging hint (1-2 sentences) to help narrow down the range. Vary between: directional, range narrowing, temperature, mathematical, parity, proximity, or urgency hints.
 
-        response = model.generate_content(prompt,
-        generation_config=genai.GenerationConfig(max_output_tokens=60))
+On a new line add: Confidence: X% — one sentence explaining your confidence level."""
+
+        response = client.models.generate_content(
+            model="gemini-2.5-flash-lite",
+            contents=prompt,
+            config=types.GenerateContentConfig(max_output_tokens=80)
+        )
         hint = response.text.strip()
         return hint
     except Exception as e:

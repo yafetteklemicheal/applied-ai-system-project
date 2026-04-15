@@ -85,7 +85,7 @@ streamlit run app.py
 
 **Why `logic_utils.py` as a separate file?** Separating game logic from UI logic makes the code testable with pytest without needing to run Streamlit. It also makes it easy to swap out the AI provider in one place.
 
-**Trade-offs:** The AI hint adds 1-3 seconds of latency per guess. This is acceptable for a game but would need a loading indicator in a production app. The hint quality also depends on the model's free tier response time, which can vary. To minimize latency, AI hint have been limited to 60 tokens per response which will reduce not just latency, but also tokens used for hint generation.
+**Trade-offs:** The AI hint adds 1-3 seconds of latency per guess. This is acceptable for a game but would need a loading indicator in a production app. The hint quality also depends on the model's free tier response time, which can vary. To minimize latency, AI hint have been limited to 80 tokens per response which will reduce not just latency, but also tokens used for hint generation.
 
 ---
 
