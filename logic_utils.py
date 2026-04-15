@@ -34,7 +34,7 @@ Context: secret={secret}, guess={guess}, direction={direction}, difference={diff
 
 Give ONE short encouraging hint (1-2 sentences) to help narrow down the range. Vary between: directional, range narrowing, temperature, mathematical, parity, proximity, or urgency hints.
 
-On a new line add: Confidence: X% — one sentence explaining your confidence level."""
+On a new line add: Hint Accuracy Confidence: X%"""
 
         response = client.models.generate_content(
             model="gemini-2.5-flash-lite",
