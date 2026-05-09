@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from google import genai
-from google.genai import types
+from google.genai import types, errors
 
 load_dotenv()
 
@@ -43,6 +43,12 @@ On a new line add: Hint Accuracy Confidence: X%"""
         )
         hint = response.text.strip()
         return hint
+    
+    except errors.ClientError as e:
+        print(f"AI Hint Error (Rate Limit): {e}")
+        direction_hint = "📉 Go LOWER!" if guess > secret else "📈 Go HIGHER!"
+        return f"{direction_hint}\n⚠️ AI hints are temporarily unavailable. You're on your own soldier."
+
     except Exception as e:
         # Fallback to simple hint if API fails
         print(f"AI Hint Error: {e}")  # Debug: print the actual error
